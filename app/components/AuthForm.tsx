@@ -20,6 +20,54 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   const isSignup = mode === "signup";
 
+  async function ensureProfile() {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      return;
+    }
+
+    const { data: existingProfile, error: profileError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error("Error loading profile", profileError.message);
+      return;
+    }
+
+    if (!existingProfile) {
+      const username =
+        user.email && user.email.includes("@")
+          ? user.email.split("@")[0]
+          : null;
+
+      const full_name =
+        user.email && user.email.includes("@")
+          ? user.email.split("@")[0]
+          : null;
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error: insertError } = await (supabase as any)
+        .from("profiles")
+        .insert({
+          id: user.id,
+          username,
+          full_name,
+          email: user.email ?? null,
+        });
+
+      if (insertError) {
+        console.error("Error creating profile", insertError.message);
+      }
+    }
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -35,9 +83,7 @@ export function AuthForm({ mode }: AuthFormProps) {
 
         if (error) throw error;
 
-        setMessage(
-          "Check your email to confirm your account, then you can log in."
-        );
+        window.location.href = "/login";
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -46,7 +92,9 @@ export function AuthForm({ mode }: AuthFormProps) {
 
         if (error) throw error;
 
-        window.location.href = "/";
+        await ensureProfile();
+
+        window.location.href = "/my-recipes";
       }
     } catch (err) {
       const msg =

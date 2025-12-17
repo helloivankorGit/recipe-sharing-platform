@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "./database.types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -10,13 +11,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
-let browserClient: SupabaseClient | null = null;
+let browserClient: SupabaseClient<Database> | null = null;
 
-export function getSupabaseClient(): SupabaseClient {
+export function getSupabaseClient(): SupabaseClient<Database> {
   if (!browserClient) {
-    browserClient = createClient(supabaseUrl, supabaseAnonKey);
+    browserClient = createClient<Database>(supabaseUrl, supabaseAnonKey);
   }
   return browserClient;
 }
+
 
 

@@ -47,7 +47,10 @@ export function Header() {
   return (
     <header className="border-b border-zinc-200 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-8 sm:py-4">
-        <Link href="/" className="flex items-center gap-2">
+        <Link
+          href={isAuthenticated ? "/my-recipes" : "/"}
+          className="flex items-center gap-2"
+        >
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900">
             <span className="text-sm font-semibold text-zinc-50">R</span>
           </div>
