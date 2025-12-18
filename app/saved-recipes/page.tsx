@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { Header } from "../components/Header";
 import { RecipeGrid } from "../components/RecipeGrid";
+import { RecipeToolbar } from "../components/RecipeToolbar";
 import { Recipe } from "../types/recipe";
 import { getSupabaseClient } from "../../lib/supabaseClient";
 
@@ -14,6 +15,11 @@ export default function SavedRecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Filter states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState("");
 
   useEffect(() => {
     const supabase = getSupabaseClient();
@@ -78,6 +84,36 @@ export default function SavedRecipesPage() {
     load();
   }, []);
 
+  // Get unique categories from recipes
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set<string>();
+    recipes.forEach(recipe => {
+      if (recipe.category && recipe.category.trim()) {
+        uniqueCategories.add(recipe.category.trim());
+      }
+    });
+    return Array.from(uniqueCategories).sort();
+  }, [recipes]);
+
+  // Filter recipes based on search and filters
+  const filteredRecipes = useMemo(() => {
+    return recipes.filter(recipe => {
+      // Search filter
+      const matchesSearch = !searchQuery || 
+        recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        recipe.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        recipe.category?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      // Category filter
+      const matchesCategory = !selectedCategory || recipe.category === selectedCategory;
+
+      // Difficulty filter
+      const matchesDifficulty = !selectedDifficulty || recipe.difficulty === selectedDifficulty;
+
+      return matchesSearch && matchesCategory && matchesDifficulty;
+    });
+  }, [recipes, searchQuery, selectedCategory, selectedDifficulty]);
+
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
       <Header />
@@ -131,14 +167,39 @@ export default function SavedRecipesPage() {
         )}
 
         {!loading && !error && recipes.length > 0 && (
-          <RecipeGrid 
-            recipes={recipes} 
-            showAuthor={true}
-            onRecipeUnsaved={(recipeId) => {
-              // Remove the recipe from the list when it's unliked
-              setRecipes(prev => prev.filter(recipe => recipe.id !== recipeId));
-            }}
-          />
+          <>
+            <RecipeToolbar
+              onSearch={setSearchQuery}
+              onCategoryFilter={setSelectedCategory}
+              onDifficultyFilter={setSelectedDifficulty}
+              searchQuery={searchQuery}
+              selectedCategory={selectedCategory}
+              selectedDifficulty={selectedDifficulty}
+              categories={categories}
+            />
+
+            {filteredRecipes.length > 0 ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-zinc-600">
+                    Showing {filteredRecipes.length} of {recipes.length} saved recipes
+                  </p>
+                </div>
+                <RecipeGrid 
+                  recipes={filteredRecipes} 
+                  showAuthor={true}
+                  onRecipeUnsaved={(recipeId) => {
+                    // Remove the recipe from the list when it's unliked
+                    setRecipes(prev => prev.filter(recipe => recipe.id !== recipeId));
+                  }}
+                />
+              </>
+            ) : (
+              <p className="text-sm text-zinc-600">
+                No saved recipes match your current filters. Try adjusting your search or filter criteria.
+              </p>
+            )}
+          </>
         )}
       </main>
     </div>
