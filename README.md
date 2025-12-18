@@ -2,7 +2,7 @@
 
 A modern, full-stack recipe sharing application built with Next.js, TypeScript, and Supabase. Share your favorite recipes, discover new dishes, and build a community of food lovers!
 
-![Recipe Sharing Platform Homepage](./screenshots/homepage.png)
+<img width="1085" height="781" alt="image" src="https://github.com/user-attachments/assets/ae69c4cb-5d53-44ba-9cec-827b79073af6" />
 *Landing page with clean, modern design*
 
 ## ✨ Features
@@ -12,7 +12,7 @@ A modern, full-stack recipe sharing application built with Next.js, TypeScript, 
 - **Profile Management** - Personalized user profiles
 - **Session Management** - Persistent login sessions
 
-![Authentication Flow](./screenshots/auth-flow.png)
+<img width="1095" height="503" alt="image" src="https://github.com/user-attachments/assets/35c83516-3e1f-4221-bb5f-79f55936dad7" />
 *Seamless login and registration experience*
 
 ### 📝 Recipe Management
@@ -22,7 +22,7 @@ A modern, full-stack recipe sharing application built with Next.js, TypeScript, 
 - **Difficulty Levels** - Easy, Medium, Hard classification
 - **Cooking Time** - Track preparation and cooking time
 
-![Recipe Creation](./screenshots/create-recipe.png)
+<img width="1082" height="926" alt="image" src="https://github.com/user-attachments/assets/6ace8651-bd8c-4b84-8b8c-05120a9649a4" />
 *Intuitive recipe creation form with dynamic ingredients*
 
 ### 🌟 Community Features
@@ -32,7 +32,7 @@ A modern, full-stack recipe sharing application built with Next.js, TypeScript, 
 - **Comments** - Engage with recipe creators and share feedback
 - **Author Attribution** - See who created each recipe
 
-![Browse Recipes](./screenshots/browse-recipes.png)
+<img width="1074" height="539" alt="image" src="https://github.com/user-attachments/assets/d243d3ce-bae8-4f4d-aa59-f1d362382d48" />
 *Beautiful grid layout showcasing community recipes*
 
 ### 💬 Interactive Elements
@@ -41,14 +41,14 @@ A modern, full-stack recipe sharing application built with Next.js, TypeScript, 
 - **Like Counter** - Real-time like counts with heart animations
 - **Responsive Design** - Perfect experience on mobile and desktop
 
-![Recipe Details](./screenshots/recipe-details.png)
+<img width="996" height="954" alt="image" src="https://github.com/user-attachments/assets/4b281e60-5a8a-4617-b0d6-57a3d5e25eaa" />
 *Detailed recipe view with ingredients, instructions, and interactions*
 
 ## 🛠️ Tech Stack
 
 - **Frontend**: Next.js 15, TypeScript, Tailwind CSS
 - **Backend**: Supabase (PostgreSQL, Authentication, Real-time)
-- **Deployment**: Vercel (recommended)
+- **Deployment**: Vercel
 - **Styling**: Tailwind CSS with custom components
 
 ## 🗃️ Database Schema
@@ -59,7 +59,7 @@ A modern, full-stack recipe sharing application built with Next.js, TypeScript, 
 - **recipe_likes** - Like/save functionality
 - **recipe_comments** - Comment system with moderation
 
-![Database Schema](./screenshots/database-schema.png)
+<img width="955" height="704" alt="image" src="https://github.com/user-attachments/assets/5ca68508-33fb-49bc-8861-9cd783d0145b" />
 *Clean, normalized database design*
 
 ## 🚀 Getting Started
@@ -166,28 +166,6 @@ pnpm dev
 6. **Open your browser**
 Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
 
-## 📱 Screenshots
-
-### Homepage
-![Homepage](./screenshots/homepage.png)
-
-### Recipe Creation
-![Create Recipe](./screenshots/create-recipe.png)
-
-### Browse Recipes
-![Browse Recipes](./screenshots/browse-recipes.png)
-
-### Recipe Details
-![Recipe Details](./screenshots/recipe-details.png)
-
-### My Recipes
-![My Recipes](./screenshots/my-recipes.png)
-
-### Saved Recipes
-![Saved Recipes](./screenshots/saved-recipes.png)
-
-### Comments System
-![Comments](./screenshots/comments.png)
 
 ## 🔧 Project Structure
 
