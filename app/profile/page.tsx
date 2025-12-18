@@ -76,7 +76,8 @@ export default function ProfilePage() {
       return;
     }
 
-    const { error: updateError } = await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error: updateError } = await (supabase as any)
       .from("profiles")
       .update({
         username: username.trim() || null,
