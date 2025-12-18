@@ -48,7 +48,7 @@ export function Header() {
     <header className="border-b border-zinc-200 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-8 sm:py-4">
         <Link
-          href={isAuthenticated ? "/my-recipes" : "/"}
+          href={isAuthenticated ? "/browse" : "/"}
           className="flex items-center gap-2"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900">
@@ -59,10 +59,22 @@ export function Header() {
           {isAuthenticated ? (
             <>
               <Link
+                href="/browse"
+                className="rounded-full px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100"
+              >
+                Browse
+              </Link>
+              <Link
                 href="/my-recipes"
                 className="rounded-full px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100"
               >
-                Dashboard
+                My Recipes
+              </Link>
+              <Link
+                href="/profile"
+                className="rounded-full px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100"
+              >
+                Profile
               </Link>
               <button
                 type="button"

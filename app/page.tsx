@@ -13,7 +13,7 @@ export default function Home() {
 
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
-        window.location.href = "/my-recipes";
+        window.location.href = "/browse";
       } else {
         setCheckingAuth(false);
       }

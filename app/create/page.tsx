@@ -16,11 +16,28 @@ export default function CreateRecipePage() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [ingredients, setIngredients] = useState("");
+  const [ingredients, setIngredients] = useState<string[]>([""]);
   const [instructions, setInstructions] = useState("");
   const [cookingTime, setCookingTime] = useState("");
   const [difficulty, setDifficulty] = useState<DifficultyOption>("");
   const [category, setCategory] = useState("");
+
+  const addIngredientField = () => {
+    setIngredients([...ingredients, ""]);
+  };
+
+  const removeIngredientField = (index: number) => {
+    if (ingredients.length > 1) {
+      const newIngredients = ingredients.filter((_, i) => i !== index);
+      setIngredients(newIngredients);
+    }
+  };
+
+  const updateIngredient = (index: number, value: string) => {
+    const newIngredients = [...ingredients];
+    newIngredients[index] = value;
+    setIngredients(newIngredients);
+  };
 
   useEffect(() => {
     const supabase = getSupabaseClient();
@@ -98,7 +115,7 @@ export default function CreateRecipePage() {
         user_id: userId,
         title: title.trim(),
         description: description.trim() || null,
-        ingredients: ingredients.trim(),
+        ingredients: JSON.stringify(ingredients.filter(ingredient => ingredient.trim() !== "")),
         instructions: instructions.trim(),
         cooking_time: Number.isNaN(cookingTimeValue) ? null : cookingTimeValue,
         difficulty: difficulty || null,
@@ -111,7 +128,7 @@ export default function CreateRecipePage() {
       return;
     }
 
-    router.push("/my-recipes");
+    router.push("/browse");
   }
 
   if (initializing) {
@@ -227,21 +244,40 @@ export default function CreateRecipePage() {
           </div>
 
           <div className="space-y-2">
-            <label
-              htmlFor="ingredients"
-              className="block text-sm font-medium text-zinc-800"
-            >
+            <label className="block text-sm font-medium text-zinc-800">
               Ingredients
             </label>
-            <textarea
-              id="ingredients"
-              required
-              rows={4}
-              value={ingredients}
-              onChange={(e) => setIngredients(e.target.value)}
-              placeholder="One ingredient per line or a short list."
-              className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm outline-none placeholder:text-zinc-400 focus:border-zinc-900"
-            />
+            <div className="space-y-3">
+              {ingredients.map((ingredient, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    required={index === 0}
+                    value={ingredient}
+                    onChange={(e) => updateIngredient(index, e.target.value)}
+                    placeholder={index === 0 ? "Enter your first ingredient" : "Enter ingredient"}
+                    className="flex-1 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm outline-none placeholder:text-zinc-400 focus:border-zinc-900"
+                  />
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => removeIngredientField(index)}
+                      className="flex h-9 w-9 items-center justify-center rounded-md border border-red-300 bg-white text-red-600 shadow-sm transition hover:bg-red-50"
+                      title="Remove ingredient"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addIngredientField}
+                className="inline-flex items-center gap-1 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-700 shadow-sm transition hover:bg-zinc-50"
+              >
+                + Add ingredient
+              </button>
+            </div>
           </div>
 
           <div className="space-y-2">

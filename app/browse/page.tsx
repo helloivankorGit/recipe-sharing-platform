@@ -7,7 +7,7 @@ import { RecipeGrid } from "../components/RecipeGrid";
 import { Recipe } from "../types/recipe";
 import { getSupabaseClient } from "../../lib/supabaseClient";
 
-export default function MyRecipesPage() {
+export default function BrowseRecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,8 +32,10 @@ export default function MyRecipesPage() {
 
       const { data, error } = await supabase
         .from("recipes")
-        .select("*")
-        .eq("user_id", user.id)
+        .select(`
+          *,
+          profiles!recipes_user_id_fkey(username, full_name)
+        `)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -56,10 +58,10 @@ export default function MyRecipesPage() {
         <header className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
-              My Recipes
+              Browse Recipes
             </h1>
             <p className="mt-1 text-sm text-zinc-600">
-              Manage and edit your created recipes.
+              Discover delicious recipes shared by our community of home cooks.
             </p>
           </div>
           <Link
@@ -82,14 +84,16 @@ export default function MyRecipesPage() {
 
         {!loading && !error && recipes.length === 0 && (
           <p className="text-sm text-zinc-600">
-            You haven&apos;t created any recipes yet. Click &quot;New recipe&quot; to get started!
+            No recipes have been shared yet. Be the first to share a delicious recipe with the community!
           </p>
         )}
 
         {!loading && !error && recipes.length > 0 && (
-          <RecipeGrid recipes={recipes} showEditButton={true} />
+          <RecipeGrid recipes={recipes} showAuthor={true} />
         )}
       </main>
     </div>
   );
 }
+
+
