@@ -1,36 +1,279 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍳 Recipe Sharing Platform
 
-## Getting Started
+A modern, full-stack recipe sharing application built with Next.js, TypeScript, and Supabase. Share your favorite recipes, discover new dishes, and build a community of food lovers!
 
-First, run the development server:
+![Recipe Sharing Platform Homepage](./screenshots/homepage.png)
+*Landing page with clean, modern design*
 
+## ✨ Features
+
+### 🔐 Authentication System
+- **User Registration & Login** - Secure authentication powered by Supabase
+- **Profile Management** - Personalized user profiles
+- **Session Management** - Persistent login sessions
+
+![Authentication Flow](./screenshots/auth-flow.png)
+*Seamless login and registration experience*
+
+### 📝 Recipe Management
+- **Create Recipes** - Rich recipe creation with dynamic ingredient fields
+- **Edit Recipes** - Full editing capabilities for recipe owners
+- **Recipe Categories** - Organize recipes by type (Breakfast, Dinner, Dessert, etc.)
+- **Difficulty Levels** - Easy, Medium, Hard classification
+- **Cooking Time** - Track preparation and cooking time
+
+![Recipe Creation](./screenshots/create-recipe.png)
+*Intuitive recipe creation form with dynamic ingredients*
+
+### 🌟 Community Features
+- **Browse All Recipes** - Discover recipes from the entire community
+- **Like/Save System** - Save favorite recipes for later
+- **Saved Recipes Page** - Personal collection of liked recipes
+- **Comments** - Engage with recipe creators and share feedback
+- **Author Attribution** - See who created each recipe
+
+![Browse Recipes](./screenshots/browse-recipes.png)
+*Beautiful grid layout showcasing community recipes*
+
+### 💬 Interactive Elements
+- **Recipe Comments** - Comment on recipes and engage with the community
+- **Comment Moderation** - Recipe authors can delete comments on their recipes
+- **Like Counter** - Real-time like counts with heart animations
+- **Responsive Design** - Perfect experience on mobile and desktop
+
+![Recipe Details](./screenshots/recipe-details.png)
+*Detailed recipe view with ingredients, instructions, and interactions*
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15, TypeScript, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Authentication, Real-time)
+- **Deployment**: Vercel (recommended)
+- **Styling**: Tailwind CSS with custom components
+
+## 🗃️ Database Schema
+
+### Tables
+- **profiles** - User profile information
+- **recipes** - Recipe data with ingredients, instructions, metadata
+- **recipe_likes** - Like/save functionality
+- **recipe_comments** - Comment system with moderation
+
+![Database Schema](./screenshots/database-schema.png)
+*Clean, normalized database design*
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm/yarn/pnpm
+- Supabase account
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/helloivankorGit/recipe-sharing-platform.git
+cd recipe-sharing-platform
+```
+
+2. **Install dependencies**
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+3. **Set up environment variables**
+```bash
+cp .env.local.example .env.local
+```
+
+Add your Supabase credentials:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+4. **Set up the database**
+
+Run the following SQL commands in your Supabase SQL editor:
+
+```sql
+-- Create profiles table
+CREATE TABLE profiles (
+  id UUID REFERENCES auth.users(id) PRIMARY KEY,
+  username TEXT UNIQUE,
+  full_name TEXT,
+  email TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create recipes table
+CREATE TABLE recipes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  ingredients TEXT NOT NULL,
+  instructions TEXT NOT NULL,
+  cooking_time INTEGER,
+  difficulty TEXT,
+  category TEXT
+);
+
+-- Create recipe_likes table
+CREATE TABLE recipe_likes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(recipe_id, user_id)
+);
+
+-- Create recipe_comments table
+CREATE TABLE recipe_comments (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  comment TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Add indexes for performance
+CREATE INDEX idx_recipes_user_id ON recipes(user_id);
+CREATE INDEX idx_recipes_created_at ON recipes(created_at DESC);
+CREATE INDEX idx_recipe_likes_recipe_id ON recipe_likes(recipe_id);
+CREATE INDEX idx_recipe_likes_user_id ON recipe_likes(user_id);
+CREATE INDEX idx_recipe_comments_recipe_id ON recipe_comments(recipe_id);
+CREATE INDEX idx_recipe_comments_created_at ON recipe_comments(created_at DESC);
+```
+
+5. **Run the development server**
 ```bash
 npm run dev
 # or
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+6. **Open your browser**
+Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📱 Screenshots
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Homepage
+![Homepage](./screenshots/homepage.png)
 
-## Learn More
+### Recipe Creation
+![Create Recipe](./screenshots/create-recipe.png)
 
-To learn more about Next.js, take a look at the following resources:
+### Browse Recipes
+![Browse Recipes](./screenshots/browse-recipes.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Recipe Details
+![Recipe Details](./screenshots/recipe-details.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### My Recipes
+![My Recipes](./screenshots/my-recipes.png)
 
-## Deploy on Vercel
+### Saved Recipes
+![Saved Recipes](./screenshots/saved-recipes.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Comments System
+![Comments](./screenshots/comments.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔧 Project Structure
+
+```
+recipe-sharing-platform/
+├── app/
+│   ├── browse/              # Browse all community recipes
+│   ├── components/          # Reusable UI components
+│   ├── create/              # Recipe creation page
+│   ├── login/               # Authentication pages
+│   ├── my-recipes/          # User's own recipes
+│   ├── recipes/[id]/        # Recipe details & editing
+│   ├── saved-recipes/       # User's saved/liked recipes
+│   └── types/               # TypeScript type definitions
+├── lib/
+│   ├── database.types.ts    # Supabase type definitions
+│   └── supabaseClient.ts    # Supabase configuration
+└── public/                  # Static assets
+```
+
+## 🎯 Key Features Explained
+
+### Dynamic Ingredient Management
+- Add unlimited ingredients with the "+" button
+- Remove ingredients (except the first one)
+- Real-time form validation
+
+### Smart Recipe Display
+- Responsive 3-column grid on desktop, stacked on mobile
+- Author attribution with profile information
+- Like counts and save functionality
+- Category and difficulty badges
+
+### Advanced Comment System
+- Threaded comments with timestamps
+- Author moderation capabilities
+- Real-time updates
+- Profile integration
+
+## 🚀 Deployment
+
+### Deploy to Vercel
+
+1. **Connect to Vercel**
+```bash
+npm install -g vercel
+vercel
+```
+
+2. **Add environment variables** in the Vercel dashboard
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+3. **Deploy**
+```bash
+vercel --prod
+```
+
+### Alternative: Deploy to Netlify
+
+1. **Build the project**
+```bash
+npm run build
+```
+
+2. **Deploy the `out` folder** to Netlify
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🙏 Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- Database and Auth powered by [Supabase](https://supabase.com/)
+- Styled with [Tailwind CSS](https://tailwindcss.com/)
+- Deployed on [Vercel](https://vercel.com/)
+
+---
+
+**Happy Cooking! 👨‍🍳👩‍🍳**
