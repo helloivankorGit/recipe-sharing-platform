@@ -99,7 +99,8 @@ export default function MyRecipesPage() {
       const matchesCategory = !selectedCategory || recipe.category === selectedCategory;
 
       // Difficulty filter
-      const matchesDifficulty = !selectedDifficulty || recipe.difficulty === selectedDifficulty;
+      const matchesDifficulty = !selectedDifficulty || 
+        (recipe.difficulty && recipe.difficulty.toLowerCase() === selectedDifficulty.toLowerCase());
 
       return matchesSearch && matchesCategory && matchesDifficulty;
     });
