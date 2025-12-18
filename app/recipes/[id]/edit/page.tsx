@@ -7,6 +7,9 @@ import { Header } from "../../../components/Header";
 import { getSupabaseClient } from "../../../../lib/supabaseClient";
 import { Database } from "../../../../lib/database.types";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 type Recipe = Database['public']['Tables']['recipes']['Row'];
 
 export default function EditRecipePage() {

@@ -5,6 +5,9 @@ import Link from "next/link";
 import { Header } from "./components/Header";
 import { getSupabaseClient } from "../lib/supabaseClient";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   const [checkingAuth, setCheckingAuth] = useState(true);
 

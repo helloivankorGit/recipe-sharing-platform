@@ -9,6 +9,9 @@ import { LikeButton } from "../../components/LikeButton";
 import { Comments } from "../../components/Comments";
 import { Recipe } from "../../types/recipe";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function RecipeDetailPage() {
   const params = useParams();
   const router = useRouter();

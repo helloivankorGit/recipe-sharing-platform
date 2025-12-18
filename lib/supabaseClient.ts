@@ -4,19 +4,18 @@ import type { Database } from "./database.types";
 let browserClient: SupabaseClient<Database> | null = null;
 
 export function getSupabaseClient(): SupabaseClient<Database> {
-  // Check if we're running in the browser
-  if (typeof window === "undefined") {
-    throw new Error("Supabase client can only be used in the browser");
-  }
-
   if (!browserClient) {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    // Use fallback values for build time
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-key";
 
-    if (!supabaseUrl || !supabaseAnonKey) {
-      throw new Error(
-        "Supabase environment variables are missing. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY."
-      );
+    // Check if we're running in the browser with real env vars
+    if (typeof window !== "undefined") {
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        throw new Error(
+          "Supabase environment variables are missing. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY."
+        );
+      }
     }
 
     browserClient = createClient<Database>(supabaseUrl, supabaseAnonKey);

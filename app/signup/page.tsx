@@ -1,7 +1,12 @@
 "use client";
 
+"use client";
+
 import { Header } from "../components/Header";
 import { AuthForm } from "../components/AuthForm";
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
 export default function SignupPage() {
   return (

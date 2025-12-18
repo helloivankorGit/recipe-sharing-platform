@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { Header } from "../components/Header";
 import { getSupabaseClient } from "../../lib/supabaseClient";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 type DifficultyOption = "easy" | "medium" | "hard" | "";
 
 export default function CreateRecipePage() {

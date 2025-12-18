@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { Header } from "../components/Header";
 import { getSupabaseClient } from "../../lib/supabaseClient";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function ProfilePage() {
   const router = useRouter();
   const supabase = getSupabaseClient();

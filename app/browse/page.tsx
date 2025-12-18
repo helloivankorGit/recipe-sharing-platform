@@ -7,6 +7,9 @@ import { RecipeGrid } from "../components/RecipeGrid";
 import { Recipe } from "../types/recipe";
 import { getSupabaseClient } from "../../lib/supabaseClient";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function BrowseRecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);

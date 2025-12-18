@@ -3,6 +3,9 @@
 import { Header } from "../components/Header";
 import { AuthForm } from "../components/AuthForm";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function LoginPage() {
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
