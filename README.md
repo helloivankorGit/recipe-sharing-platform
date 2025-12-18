@@ -36,7 +36,7 @@ A modern, full-stack recipe sharing application built with Next.js, TypeScript, 
 - **Comments** - Engage with recipe creators and share feedback
 - **Author Attribution** - See who created each recipe
 
-<img width="1074" height="539" alt="image" src="https://github.com/user-attachments/assets/d243d3ce-bae8-4f4d-aa59-f1d362382d48" />
+<img width="1000" height="675" alt="image" src="https://github.com/user-attachments/assets/feb8ee73-6b14-447f-a360-94f2059c723d" />
 *Beautiful grid layout showcasing community recipes*
 
 ### 💬 Interactive Elements
