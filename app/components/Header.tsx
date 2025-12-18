@@ -8,40 +8,64 @@ export function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const supabase = getSupabaseClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let subscription: any = null;
 
-    // Initial check
-    supabase.auth.getUser().then(({ data, error }) => {
-      if (error) {
-        // "Auth session missing!" just means there is no active session.
-        if (error.message === "Auth session missing!") {
+    const initAuth = async () => {
+      try {
+        const supabase = getSupabaseClient();
+
+        // Initial check
+        const { data, error } = await supabase.auth.getUser();
+        if (error) {
+          // "Auth session missing!" just means there is no active session.
+          if (error.message === "Auth session missing!") {
+            setIsAuthenticated(false);
+            return;
+          }
+
+          console.error("Error getting user", error.message);
           setIsAuthenticated(false);
           return;
         }
+        setIsAuthenticated(!!data.user);
 
-        console.error("Error getting user", error.message);
+        // Listen for auth changes
+        const {
+          data: { subscription: authSubscription },
+        } = supabase.auth.onAuthStateChange(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (_event: any, session: any) => {
+            setIsAuthenticated(!!session?.user);
+          }
+        );
+
+        subscription = authSubscription;
+      } catch (error) {
+        console.error("Error initializing Supabase client:", error);
         setIsAuthenticated(false);
-        return;
       }
-      setIsAuthenticated(!!data.user);
-    });
+    };
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session?.user);
-    });
+    initAuth();
 
     return () => {
-      subscription.unsubscribe();
+      if (subscription) {
+        subscription.unsubscribe();
+      }
     };
   }, []);
 
   const handleSignOut = async () => {
-    const supabase = getSupabaseClient();
-    await supabase.auth.signOut();
-    window.location.href = "/";
+    try {
+      const supabase = getSupabaseClient();
+      await supabase.auth.signOut();
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error signing out:", error);
+      // Still redirect on error
+      window.location.href = "/";
+    }
   };
 
   return (

@@ -4,6 +4,11 @@ import type { Database } from "./database.types";
 let browserClient: SupabaseClient<Database> | null = null;
 
 export function getSupabaseClient(): SupabaseClient<Database> {
+  // Check if we're running in the browser
+  if (typeof window === "undefined") {
+    throw new Error("Supabase client can only be used in the browser");
+  }
+
   if (!browserClient) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
