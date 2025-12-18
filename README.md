@@ -48,6 +48,15 @@ A modern, full-stack recipe sharing application built with Next.js, TypeScript, 
 <img width="996" height="954" alt="image" src="https://github.com/user-attachments/assets/4b281e60-5a8a-4617-b0d6-57a3d5e25eaa" />
 *Detailed recipe view with ingredients, instructions, and interactions*
 
+### 🔍 Search & Filtering
+- **Smart Search** - Search recipes by title, description, or category with real-time results
+- **Category Filter** - Filter recipes by category (dynamically populated from existing recipes)
+- **Difficulty Filter** - Filter by difficulty level (Easy, Medium, Hard)
+- **Combined Filters** - Use multiple filters simultaneously for precise recipe discovery
+- **Filter Results Counter** - See how many recipes match your current filters
+- **Clear All Filters** - Quick reset to view all recipes
+- **Available on All Pages** - Search and filter on Browse, My Recipes, and Saved Recipes pages
+
 ## 🛠️ Tech Stack
 
 - **Frontend**: Next.js 15, TypeScript, Tailwind CSS
