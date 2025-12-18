@@ -33,7 +33,8 @@ export default function ProfilePage() {
         return;
       }
 
-      const { data, error: profileError } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error: profileError } = await (supabase as any)
         .from("profiles")
         .select("username, full_name")
         .eq("id", user.id)
