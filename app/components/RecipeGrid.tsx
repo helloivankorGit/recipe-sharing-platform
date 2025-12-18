@@ -1,13 +1,21 @@
 import Link from "next/link";
 import { Recipe } from "../types/recipe";
+import { LikeCount } from "./LikeCount";
+import { LikeButton } from "./LikeButton";
 
 type RecipeGridProps = {
   recipes: Recipe[];
   showAuthor?: boolean;
   showEditButton?: boolean;
+  onRecipeUnsaved?: (recipeId: string) => void;
 };
 
-export function RecipeGrid({ recipes, showAuthor = false, showEditButton = false }: RecipeGridProps) {
+export function RecipeGrid({ 
+  recipes, 
+  showAuthor = false, 
+  showEditButton = false,
+  onRecipeUnsaved 
+}: RecipeGridProps) {
   return (
     <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {recipes.map((recipe) => (
@@ -30,24 +38,37 @@ export function RecipeGrid({ recipes, showAuthor = false, showEditButton = false
               {recipe.description}
             </p>
           )}
-          <div className="mt-auto">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-500 mb-4">
-              {recipe.cooking_time != null && (
-                <span className="flex items-center gap-1">
-                  ⏰ {recipe.cooking_time} min
-                </span>
-              )}
-              {recipe.difficulty && (
-                <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
-                  {recipe.difficulty}
-                </span>
-              )}
-              {recipe.category && (
-                <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                  {recipe.category}
-                </span>
-              )}
-            </div>
+          <div className="mt-auto">                  <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-500 mb-4">
+                    {recipe.cooking_time != null && (
+                      <span className="flex items-center gap-1">
+                        ⏰ {recipe.cooking_time} min
+                      </span>
+                    )}
+                    {recipe.difficulty && (
+                      <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
+                        {recipe.difficulty}
+                      </span>
+                    )}
+                    {recipe.category && (
+                      <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                        {recipe.category}
+                      </span>
+                    )}
+                    {onRecipeUnsaved ? (
+                      <LikeButton
+                        recipeId={recipe.id}
+                        initialLikeCount={recipe.likes_count || 0}
+                        initialIsLiked={recipe.is_liked_by_user || false}
+                        onLikeChange={(newCount, isLiked) => {
+                          if (!isLiked) {
+                            onRecipeUnsaved(recipe.id);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <LikeCount likeCount={recipe.likes_count || 0} />
+                    )}
+                  </div>
             {showEditButton ? (
               <div className="flex gap-2">
                 <Link 

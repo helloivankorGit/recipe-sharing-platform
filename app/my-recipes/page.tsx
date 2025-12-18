@@ -38,8 +38,26 @@ export default function MyRecipesPage() {
 
       if (error) {
         setError(error.message);
-      } else {
-        setRecipes(data || []);
+      } else if (data) {
+        // Process the data to include like counts
+        const recipesWithLikes = await Promise.all(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          data.map(async (recipe: any) => {
+            // Get total like count
+            const { count: likeCount } = await supabase
+              .from("recipe_likes")
+              .select("*", { count: "exact", head: true })
+              .eq("recipe_id", recipe.id);
+
+            return {
+              ...recipe,
+              likes_count: likeCount || 0,
+              is_liked_by_user: false, // User can't like their own recipes
+            } as Recipe;
+          })
+        );
+
+        setRecipes(recipesWithLikes);
       }
 
       setLoading(false);

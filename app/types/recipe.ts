@@ -13,4 +13,7 @@ export type Recipe = {
     username: string | null;
     full_name: string | null;
   };
+  // Like information
+  likes_count?: number;
+  is_liked_by_user?: boolean;
 };

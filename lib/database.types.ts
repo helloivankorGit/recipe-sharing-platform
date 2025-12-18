@@ -73,6 +73,52 @@ export type Database = {
           instructions?: string;
         };
       };
+      recipe_likes: {
+        Row: {
+          id: string;
+          recipe_id: string;
+          user_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          recipe_id: string;
+          user_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          recipe_id?: string;
+          user_id?: string;
+          created_at?: string;
+        };
+      };
+      recipe_comments: {
+        Row: {
+          id: string;
+          recipe_id: string;
+          user_id: string;
+          comment: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          recipe_id: string;
+          user_id: string;
+          comment: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          recipe_id?: string;
+          user_id?: string;
+          comment?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
   };
 };

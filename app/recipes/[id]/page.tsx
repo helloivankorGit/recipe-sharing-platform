@@ -5,9 +5,9 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Header } from "../../components/Header";
 import { getSupabaseClient } from "../../../lib/supabaseClient";
-import { Database } from "../../../lib/database.types";
-
-type Recipe = Database['public']['Tables']['recipes']['Row'];
+import { LikeButton } from "../../components/LikeButton";
+import { Comments } from "../../components/Comments";
+import { Recipe } from "../../types/recipe";
 
 export default function RecipeDetailPage() {
   const params = useParams();
@@ -43,8 +43,31 @@ export default function RecipeDetailPage() {
       if (error) {
         setError(error.message);
       } else if (data) {
-        setRecipe(data as Recipe);
-        setIsOwner(data.user_id === user.id);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const recipeData = data as any;
+        
+        // Get like information
+        const { count: likeCount } = await supabase
+          .from("recipe_likes")
+          .select("*", { count: "exact", head: true })
+          .eq("recipe_id", recipeData.id);
+
+        // Check if current user liked this recipe
+        const { data: userLike } = await supabase
+          .from("recipe_likes")
+          .select("id")
+          .eq("recipe_id", recipeData.id)
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        const recipeWithLikes = {
+          ...recipeData,
+          likes_count: likeCount || 0,
+          is_liked_by_user: !!userLike,
+        } as Recipe;
+
+        setRecipe(recipeWithLikes);
+        setIsOwner(recipeData.user_id === user.id);
       }
 
       setLoading(false);
@@ -228,10 +251,26 @@ export default function RecipeDetailPage() {
                     </p>
                   </div>
                 </div>
+
+                {/* Like Button - only show if not the owner */}
+                {!isOwner && (
+                  <div className="pt-2 border-t border-zinc-100">
+                    <div className="flex items-center justify-center">
+                      <LikeButton
+                        recipeId={recipe.id}
+                        initialLikeCount={recipe.likes_count || 0}
+                        initialIsLiked={recipe.is_liked_by_user || false}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
+
+        {/* Comments Section */}
+        <Comments recipeId={recipe.id} recipeOwnerId={recipe.user_id} />
       </main>
     </div>
   );
