@@ -2,6 +2,10 @@
 
 A modern, full-stack recipe sharing application built with Next.js, TypeScript, and Supabase. Share your favorite recipes, discover new dishes, and build a community of food lovers!
 
+## 🚀 Live Demo
+
+**🔗 [Try it live on Vercel](https://recipe-sharing-platform-uyy6.vercel.app/)**
+
 <img width="1085" height="781" alt="image" src="https://github.com/user-attachments/assets/ae69c4cb-5d53-44ba-9cec-827b79073af6" />
 *Landing page with clean, modern design*
 
